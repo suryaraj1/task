@@ -58,6 +58,33 @@ func AddTask(task string) (int, error) {
 	return id, nil
 }
 
+func DeleteTask(taskId int) (models.Task, error) {
+	var task models.Task
+
+	err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(taskBucket)
+		key := itob(taskId)
+		data := b.Get(key)
+
+		if data == nil {
+			return bolt.ErrBucketNotFound
+		}
+
+		task = models.Task{
+			Key:   taskId,
+			Value: string(data),
+		}
+
+		return b.Delete(key)
+	})
+
+	if err != nil {
+		return models.Task{}, nil
+	}
+
+	return task, nil
+}
+
 // util methods
 // ref gopher repo
 func btoi(b []byte) int {
