@@ -58,6 +58,13 @@ func AddTask(task string) (int, error) {
 	return id, nil
 }
 
+func DeleteTask(taskId int) error {
+	return db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(taskBucket)
+		return b.Delete(itob(taskId))
+	})
+}
+
 // util methods
 // ref gopher repo
 func btoi(b []byte) int {
