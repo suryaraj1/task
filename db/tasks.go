@@ -58,11 +58,31 @@ func AddTask(task string) (int, error) {
 	return id, nil
 }
 
-func DeleteTask(taskId int) error {
-	return db.Update(func(tx *bolt.Tx) error {
+func DeleteTask(taskId int) (models.Task, error) {
+	var task models.Task
+
+	err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket(taskBucket)
-		return b.Delete(itob(taskId))
+		key := itob(taskId)
+		data := b.Get(key)
+
+		if data == nil {
+			return bolt.ErrBucketNotFound
+		}
+
+		task = models.Task{
+			Key:   taskId,
+			Value: string(data),
+		}
+
+		return b.Delete(key)
 	})
+
+	if err != nil {
+		return models.Task{}, nil
+	}
+
+	return task, nil
 }
 
 // util methods

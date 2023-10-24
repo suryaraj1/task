@@ -20,14 +20,14 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		id, _ := strconv.Atoi(args[0])
-		err := db.DeleteTask(id)
+		task, err := db.DeleteTask(id)
 
 		if err != nil {
 			fmt.Println("Encountered error when trying to delete task from db!!")
 			return
 		}
 
-		fmt.Println("You have deleted a task")
+		fmt.Println(task.Value + ": Deletion success!")
 
 	},
 }

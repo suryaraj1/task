@@ -26,7 +26,7 @@ to quickly create a Cobra application.`,
 
 		fmt.Println("You have the following tasks:")
 		for id, task := range tasks {
-			fmt.Println(strconv.Itoa(id+1) + ". " + task.Value)
+			fmt.Println(strconv.Itoa(id+1) + ". " + task.Value + " ID: " + strconv.Itoa(task.Key))
 		}
 	},
 }
