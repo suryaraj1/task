@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
+	"task/db"
 
 	"github.com/spf13/cobra"
 )
@@ -16,7 +18,16 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
+		tasks, err := db.ListTasks()
+		if err != nil {
+			fmt.Println("Encountered error while trying to read tasks from db!!")
+			return
+		}
+
+		fmt.Println("You have the following tasks:")
+		for id, task := range tasks {
+			fmt.Println(strconv.Itoa(id+1) + ". " + task.Value)
+		}
 	},
 }
 
